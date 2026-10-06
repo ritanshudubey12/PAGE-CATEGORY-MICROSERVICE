@@ -1,0 +1,4 @@
+category_code,name,slug,description,category_type,parent_category_id,status,icon,display_order,seo_title,seo_description,seo_keywords,canonical_path
+TECH_NEWS,Tech News,tech-news,Latest tech news and updates,BLOG,,ACTIVE,newspaper,1,Latest Technology News,Read the latest updates in technology,tech, technology, news,/blog/tech-news
+MOBILE_REVIEWS,Mobile Reviews,mobile-reviews,In-depth mobile smartphone reviews,BLOG,,ACTIVE,phone,2,Mobile Reviews & Comparison,Detailed smartphone reviews and comparisons,mobile, reviews, smartphone,/blog/mobile-reviews
+CLOUD_HOSTING,Cloud Hosting,cloud-hosting,Scalable enterprise cloud hosting,SERVICE,,ACTIVE,cloud,10,Enterprise Cloud Hosting Services,Reliable high-speed cloud hosting solutions,cloud, hosting, servers,/services/cloud-hosting

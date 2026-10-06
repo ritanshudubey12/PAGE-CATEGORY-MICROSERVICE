@@ -1,0 +1,614 @@
+{
+  "info": {
+    "_postman_id": "9d1729e6-9778-42f1-bc38-d372413f5f6e",
+    "name": "Triostack Page Category API Microservice",
+    "description": "Comprehensive Postman collection for Triostack Page Category Microservice including CRUD, Tree Hierarchy, Bulk Import/Delete, Health & Readiness Probes, with Tenant Isolation Headers.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:4000",
+      "type": "string"
+    },
+    {
+      "key": "brr_token",
+      "value": "triostack_secret_page_category_token_2026",
+      "type": "string"
+    },
+    {
+      "key": "tenant_id",
+      "value": "1001",
+      "type": "string"
+    },
+    {
+      "key": "organization_id",
+      "value": "5001",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "9001",
+      "type": "string"
+    },
+    {
+      "key": "category_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "category_code",
+      "value": "SEO_SERVICES",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health & Readiness Probes",
+      "item": [
+        {
+          "name": "1. Liveness Probe (Health)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            },
+            "description": "Checks if the microservice process is running and alive."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Readiness Probe (Database Check)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ready",
+              "host": ["{{base_url}}"],
+              "path": ["ready"]
+            },
+            "description": "Checks if the PostgreSQL database connection pool is active and ready."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Page Categories CRUD & Hierarchy",
+      "item": [
+        {
+          "name": "1. Create Root Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{brr_token}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Tenant-Id",
+                "value": "{{tenant_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-Id",
+                "value": "{{organization_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{user_id}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_code\": \"SEO_SERVICES\",\n  \"name\": \"Search Engine Optimization\",\n  \"slug\": \"seo-services\",\n  \"description\": \"Comprehensive SEO and digital growth services\",\n  \"category_type\": \"SERVICE\",\n  \"parent_category_id\": null,\n  \"status\": \"ACTIVE\",\n  \"icon\": \"search-engine\",\n  \"image_url\": \"https://images.unsplash.com/photo-1571786256017-aee7a0c009b6\",\n  \"display_order\": 10,\n  \"seo_title\": \"Professional SEO Services | Triostack\",\n  \"seo_description\": \"Grow your organic search ranking and web traffic with proven SEO strategies.\",\n  \"seo_keywords\": \"seo, search engine, digital marketing, rank\",\n  \"canonical_path\": \"/services/seo\",\n  \"metadata\": {\n    \"theme_color\": \"#2563eb\",\n    \"featured\": true\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/page-categories",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "page-categories"]
+            },
+            "description": "Creates a new root page category scoped to Tenant and Organization."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Create Child Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{brr_token}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Tenant-Id",
+                "value": "{{tenant_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-Id",
+                "value": "{{organization_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{user_id}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_code\": \"TECHNICAL_SEO\",\n  \"name\": \"Technical SEO & Audits\",\n  \"slug\": \"technical-seo-audits\",\n  \"description\": \"Core web vitals, schema markup, and site architecture optimization\",\n  \"category_type\": \"SERVICE\",\n  \"parent_category_id\": \"{{category_id}}\",\n  \"status\": \"ACTIVE\",\n  \"icon\": \"code-gear\",\n  \"image_url\": null,\n  \"display_order\": 1,\n  \"seo_title\": \"Technical SEO Audits & Performance Optimization\",\n  \"seo_description\": \"Detailed technical audit of website infrastructure and crawling speed.\",\n  \"seo_keywords\": \"technical seo, core web vitals, speed audit\",\n  \"canonical_path\": \"/services/seo/technical\",\n  \"metadata\": {\n    \"difficulty\": \"advanced\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/page-categories",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "page-categories"]
+            },
+            "description": "Creates a child category pointing to an existing parent_category_id in the same tenant and org."
+          },
+          "response": []
+        },
+        {
+          "name": "3. List / Search / Filter & Paginate Categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{brr_token}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Tenant-Id",
+                "value": "{{tenant_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-Id",
+                "value": "{{organization_id}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/page-categories?page=1&limit=20&q=SEO&status=ACTIVE&category_type=SERVICE&sort=display_order&order=ASC",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "page-categories"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number (>= 1)"
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Page size limit (1 - 100)"
+                },
+                {
+                  "key": "q",
+                  "value": "SEO",
+                  "description": "Search term across name, category_code, slug"
+                },
+                {
+                  "key": "status",
+                  "value": "ACTIVE",
+                  "description": "Filter by status (ACTIVE / INACTIVE)"
+                },
+                {
+                  "key": "category_type",
+                  "value": "SERVICE",
+                  "description": "Filter by category type"
+                },
+                {
+                  "key": "sort",
+                  "value": "display_order",
+                  "description": "Sort column (name, category_code, display_order, created_at, updated_at, slug)"
+                },
+                {
+                  "key": "order",
+                  "value": "ASC",
+                  "description": "Sort direction (ASC / DESC)"
+                }
+              ]
+            },
+            "description": "List categories with full search, filter, sort and pagination support."
+          },
+          "response": []
+        },
+        {
+          "name": "4. Get Nested Hierarchy Tree",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{brr_token}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Tenant-Id",
+                "value": "{{tenant_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-Id",
+                "value": "{{organization_id}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/page-categories/tree",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "page-categories", "tree"]
+            },
+            "description": "Fetches the full nested category tree hierarchy with children arrays."
+          },
+          "response": []
+        },
+        {
+          "name": "5. Get Root Categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{brr_token}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Tenant-Id",
+                "value": "{{tenant_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-Id",
+                "value": "{{organization_id}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/page-categories/roots",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "page-categories", "roots"]
+            },
+            "description": "Fetches all top-level root categories (parent_category_id IS NULL)."
+          },
+          "response": []
+        },
+        {
+          "name": "6. Get Category by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{brr_token}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Tenant-Id",
+                "value": "{{tenant_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-Id",
+                "value": "{{organization_id}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/page-categories/{{category_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "page-categories", "{{category_id}}"]
+            },
+            "description": "Retrieves a single category by its BIGINT string ID."
+          },
+          "response": []
+        },
+        {
+          "name": "7. Get Direct Children of Category",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{brr_token}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Tenant-Id",
+                "value": "{{tenant_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-Id",
+                "value": "{{organization_id}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/page-categories/{{category_id}}/children",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "page-categories", "{{category_id}}", "children"]
+            },
+            "description": "Retrieves immediate child categories under the specified parent ID."
+          },
+          "response": []
+        },
+        {
+          "name": "8. Get Category by Business Code",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{brr_token}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Tenant-Id",
+                "value": "{{tenant_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-Id",
+                "value": "{{organization_id}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/page-categories/code/{{category_code}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "page-categories", "code", "{{category_code}}"]
+            },
+            "description": "Finds a category by its stable category_code."
+          },
+          "response": []
+        },
+        {
+          "name": "9. Update Category Details",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{brr_token}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Tenant-Id",
+                "value": "{{tenant_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-Id",
+                "value": "{{organization_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{user_id}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Search Engine & Growth Optimization\",\n  \"display_order\": 15,\n  \"seo_title\": \"SEO & Growth Marketing Services\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/page-categories/{{category_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "page-categories", "{{category_id}}"]
+            },
+            "description": "Updates category fields. Enforces cycle-safe validation when parent_category_id is modified."
+          },
+          "response": []
+        },
+        {
+          "name": "10. Update Category Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{brr_token}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Tenant-Id",
+                "value": "{{tenant_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-Id",
+                "value": "{{organization_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{user_id}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"INACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/page-categories/{{category_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "page-categories", "{{category_id}}", "status"]
+            },
+            "description": "Updates category lifecycle status to ACTIVE or INACTIVE."
+          },
+          "response": []
+        },
+        {
+          "name": "11. Delete Category (Soft Delete)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{brr_token}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Tenant-Id",
+                "value": "{{tenant_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-Id",
+                "value": "{{organization_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{user_id}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/page-categories/{{category_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "page-categories", "{{category_id}}"]
+            },
+            "description": "Soft deletes a category. Rejects deletion if active child categories exist."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Bulk Operations",
+      "item": [
+        {
+          "name": "1. Bulk Import (CSV / XLSX)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{brr_token}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Tenant-Id",
+                "value": "{{tenant_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-Id",
+                "value": "{{organization_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{user_id}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "description": "Upload a .csv or .xlsx category spreadsheet"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/page-categories/bulk-import?mode=atomic",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "page-categories", "bulk-import"],
+              "query": [
+                {
+                  "key": "mode",
+                  "value": "atomic",
+                  "description": "Import mode: 'atomic' (rollback all on error) or 'partial' (insert valid rows)"
+                }
+              ]
+            },
+            "description": "Imports multiple categories from a CSV or Excel XLSX file with duplicate detection and row error reports."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Bulk Delete Categories",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{brr_token}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Tenant-Id",
+                "value": "{{tenant_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-Organization-Id",
+                "value": "{{organization_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{user_id}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ids\": [\"101\", \"102\", \"103\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/page-categories/bulk-delete",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "page-categories", "bulk-delete"]
+            },
+            "description": "Bulk soft deletes multiple categories by BIGINT string IDs while respecting tenant isolation."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

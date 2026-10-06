@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  page-category-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: page-category-service
+    ports:
+      - "4000:4000"
+    environment:
+      PORT: 4000
+      NODE_ENV: production
+      BRR_TOKEN: triostack_secret_page_category_token_2026
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgrespassword
+      DB_NAME: triostack_page_category
+      DB_SSL: "false"
+      MAX_BULK_ROWS: 5000
+      MAX_UPLOAD_SIZE_MB: 10
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: page-category-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: triostack_page_category
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./src/database/migrations/001_create_page_categories.sql:/docker-entrypoint-initdb.d/001_create_page_categories.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d triostack_page_category"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  pgdata:
